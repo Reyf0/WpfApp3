@@ -1,0 +1,24 @@
+﻿<Window x:Class="WpfApp3.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp3"
+        mc:Ignorable="d"
+        Title="LoginWindow" Height="450" Width="800">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBox x:Name="LoginTextBox" Width="200" Margin="0,5"/>
+            <PasswordBox x:Name="PasswordBox" Width="200" Margin="0,5"/>
+            <Button Content="Войти" Click="Login_Click" Width="200" Margin="0,5"/>
+            <Button Content="Войти как гость" Click="Guest_Click" Width="200" Margin="0,5"/>
+            <Button Content="Регистрация" Click="Register_Click" Width="200" Margin="0,5"/>
+        </StackPanel>
+    </Grid>
+</Window>

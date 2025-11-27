@@ -1,0 +1,50 @@
+﻿<Window x:Class="WpfApp3.OrderEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp3"
+        mc:Ignorable="d"
+        Title="OrderEditWindow" Height="450" Width="800">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Товар:" Grid.Row="0"/>
+        <ComboBox x:Name="ProductCombo" Grid.Row="1" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,4"/>
+
+        <TextBlock Text="Статус:" Grid.Row="2" Margin="0,8,0,0"/>
+        <ComboBox x:Name="StatusCombo" Grid.Row="3" Margin="0,4">
+            <ComboBoxItem Content="Обработка"/>
+            <ComboBoxItem Content="Доставка"/>
+            <ComboBoxItem Content="Завершен"/>
+            <ComboBoxItem Content="Отменен"/>
+        </ComboBox>
+
+        <StackPanel Grid.Row="4" Margin="0,8,0,0">
+            <TextBlock Text="Адрес:"/>
+            <TextBox x:Name="AddressBox" Margin="0,4"/>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <StackPanel>
+                    <TextBlock Text="Дата заказа:"/>
+                    <DatePicker x:Name="OrderDatePicker"/>
+                </StackPanel>
+                <StackPanel Margin="20,0,0,0">
+                    <TextBlock Text="Дата выдачи:"/>
+                    <DatePicker x:Name="DeliveryDatePicker"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="5" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="Сохранить" Width="100" Click="Save_Click" Margin="0,0,8,0"/>
+            <Button Content="Отмена" Width="80" Click="Cancel_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
