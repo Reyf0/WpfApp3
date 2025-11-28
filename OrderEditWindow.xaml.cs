@@ -1,18 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using WpfApp3.Data;
+using WpfApp3.Models;
 
 namespace WpfApp3
 {
@@ -21,13 +12,18 @@ namespace WpfApp3
     /// </summary>
     public partial class OrderEditWindow : Window
     {
-        private int? _orderId; 
+        private int? _orderId;
 
         public OrderEditWindow(int? orderId = null)
         {
             InitializeComponent();
             _orderId = orderId;
+
+            ProductCombo.DisplayMemberPath = "Name";
+            ProductCombo.SelectedValuePath = "Id";
+
             LoadProducts();
+
             if (_orderId.HasValue)
             {
                 LoadOrder(_orderId.Value);
@@ -41,15 +37,16 @@ namespace WpfApp3
         private void LoadProducts()
         {
             using var db = new AppDbContext();
-            ProductCombo.ItemsSource = db.Products.ToList();
-            if (ProductCombo.Items.Count > 0)
+            var products = db.Products.OrderBy(p => p.Name).ToList();
+            ProductCombo.ItemsSource = products;
+            if (products.Count > 0)
                 ProductCombo.SelectedIndex = 0;
         }
 
         private void LoadOrder(int id)
         {
             using var db = new AppDbContext();
-            var o = db.Orders.Include(x => x.ProductName).FirstOrDefault(x => x.Id == id);
+            var o = db.Orders.Include(x => x.Product).FirstOrDefault(x => x.Id == id);
             if (o == null)
             {
                 MessageBox.Show("Заказ не найден.");
@@ -58,7 +55,8 @@ namespace WpfApp3
                 return;
             }
 
-            ProductCombo.SelectedValue = o.Id;
+            ProductCombo.SelectedValue = o.ProductId;
+
             foreach (var item in StatusCombo.Items)
             {
                 if ((item as System.Windows.Controls.ComboBoxItem)?.Content?.ToString() == o.Status)
@@ -70,7 +68,11 @@ namespace WpfApp3
 
             AddressBox.Text = o.Address;
             OrderDatePicker.SelectedDate = o.OrderDate;
-            DeliveryDatePicker.SelectedDate = o.DeliveryDate == default ? null : (DateTime?)o.DeliveryDate;
+
+            if (o.DeliveryDate == default(DateTime))
+                DeliveryDatePicker.SelectedDate = null;
+            else
+                DeliveryDatePicker.SelectedDate = o.DeliveryDate;
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
@@ -90,6 +92,12 @@ namespace WpfApp3
             var productId = (int)ProductCombo.SelectedValue;
             var status = (StatusCombo.SelectedItem as System.Windows.Controls.ComboBoxItem)?.Content.ToString() ?? "Обработка";
             var address = AddressBox.Text.Trim();
+            if (string.IsNullOrWhiteSpace(address))
+            {
+                MessageBox.Show("Укажите адрес доставки.");
+                return;
+            }
+
             var orderDate = OrderDatePicker.SelectedDate ?? DateTime.Now;
             var deliveryDate = DeliveryDatePicker.SelectedDate;
 
@@ -104,7 +112,7 @@ namespace WpfApp3
                     return;
                 }
 
-                order.Id = productId;
+                order.ProductId = productId;
                 order.Status = status;
                 order.Address = address;
                 order.OrderDate = orderDate;
@@ -113,9 +121,9 @@ namespace WpfApp3
             }
             else
             {
-                var order = new Models.Order
+                var order = new Order
                 {
-                    Id = productId,
+                    ProductId = productId,
                     Status = status,
                     Address = address,
                     OrderDate = orderDate,

@@ -1,18 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using WpfApp3.Data;
 using WpfApp3.Models;
 
@@ -23,21 +14,35 @@ namespace WpfApp3
     /// </summary>
     public partial class OrdersWindow : Page
     {
-        private readonly Models.User _user;
+        private readonly User _user;
+        private ObservableCollection<Order> _orders = new();
 
-        public OrdersWindow(Models.User user)
+        public OrdersWindow(User user)
         {
             InitializeComponent();
             _user = user;
             RoleLabel.Text = $"Роль: {_user.Role}";
+            RightsLabel.Text = (_user.Role == "Администратор" || _user.Role == "Admin")
+                ? "Удаление: доступно"
+                : "Удаление: запрещено";
+            DeleteButton.IsEnabled = (_user.Role == "Администратор" || _user.Role == "Admin");
+            AddButton.IsEnabled = !(_user.Role == "Гость" || _user.Role == "Guest");
+            EditButton.IsEnabled = !(_user.Role == "Гость" || _user.Role == "Guest");
+            OrdersList.SelectionChanged += OrdersList_SelectionChanged;
             LoadOrders();
+        }
+
+        private void OrdersList_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+        {
+
         }
 
         private void LoadOrders()
         {
             using var db = new AppDbContext();
-            var list = db.Orders.Include(o => o.Product).ToList();
-            OrdersGrid.ItemsSource = list;
+            var list = db.Orders.Include(o => o.Product).OrderBy(o => o.Id).ToList();
+            _orders = new ObservableCollection<Order>(list);
+            OrdersList.ItemsSource = _orders;
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
@@ -61,26 +66,26 @@ namespace WpfApp3
 
         private void Edit_Click(object sender, RoutedEventArgs e)
         {
-            if (OrdersGrid.SelectedItem is not Models.Order selected)
+            if (OrdersList.SelectedItem is not Order selected)
             {
                 MessageBox.Show("Выберите заказ для редактирования.");
                 return;
             }
 
-            var w = new OrderEditWindow(selected.Id); 
+            var w = new OrderEditWindow(selected.Id);
             var res = w.ShowDialog();
             if (res == true) LoadOrders();
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            if (_user.Role != "Администратор" && _user.Role != "Admin")
+            if (!(_user.Role == "Администратор" || _user.Role == "Admin"))
             {
                 MessageBox.Show("Удаление доступно только администратору!");
                 return;
             }
 
-            if (OrdersGrid.SelectedItem is not Models.Order selected)
+            if (OrdersList.SelectedItem is not Order selected)
             {
                 MessageBox.Show("Выберите заказ для удаления.");
                 return;

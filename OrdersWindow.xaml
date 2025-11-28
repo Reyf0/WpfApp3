@@ -3,7 +3,6 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:WpfApp3"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="OrdersWindow">
@@ -12,21 +11,58 @@
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,0,0,8">
             <Button Content="Назад" Width="80" Click="Back_Click" Margin="0,0,5,0"/>
             <Button Content="Вперед" Width="80" Click="Forward_Click" Margin="0,0,15,0"/>
-            <Button Content="Добавить" Width="90" Click="Add_Click" Margin="0,0,5,0"/>
-            <Button Content="Редактировать" Width="100" Click="Edit_Click" Margin="0,0,5,0"/>
-            <Button Content="Удалить" Width="90" Click="Delete_Click"/>
-            <TextBlock x:Name="RoleLabel" VerticalAlignment="Center" Margin="20,0,0,0"/>
+            <Button x:Name="AddButton" Content="Добавить" Width="90" Click="Add_Click" Margin="0,0,5,0"/>
+            <Button x:Name="EditButton" Content="Редактировать" Width="100" Click="Edit_Click" Margin="0,0,5,0"/>
+            <Button x:Name="DeleteButton" Content="Удалить" Width="90" Click="Delete_Click"/>
+            <TextBlock x:Name="RoleLabel" VerticalAlignment="Center" Margin="20,0,0,0" />
         </StackPanel>
 
-        <DataGrid x:Name="OrdersGrid" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
-                <DataGridTextColumn Header="Товар" Binding="{Binding Path=Product.Name}" Width="*"/>
-                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="120"/>
-                <DataGridTextColumn Header="Адрес" Binding="{Binding Address}" Width="200"/>
-                <DataGridTextColumn Header="Дата заказа" Binding="{Binding OrderDate, StringFormat=d}" Width="120"/>
-                <DataGridTextColumn Header="Дата выдачи" Binding="{Binding DeliveryDate, StringFormat=d}" Width="120"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,0,0,8">
+            <TextBlock Text="Права: " VerticalAlignment="Center"/>
+            <TextBlock x:Name="RightsLabel" VerticalAlignment="Center" Margin="6,0,0,0"/>
+        </StackPanel>
+
+        <ListBox x:Name="OrdersList" SelectionMode="Single" HorizontalContentAlignment="Stretch" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Padding="8" Margin="0,0,0,6" BorderThickness="1" CornerRadius="6" BorderBrush="#DDD">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="150"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="{Binding Id}" VerticalAlignment="Center" FontWeight="Bold"/>
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <TextBlock Text="{Binding Product.Name}" FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding Product.Manufacturer}" FontStyle="Italic" FontSize="11"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2" Orientation="Vertical">
+                                <TextBlock Text="Статус:" FontSize="11" Foreground="Gray"/>
+                                <TextBlock Text="{Binding Status}" FontWeight="Bold"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="3" Orientation="Vertical">
+                                <TextBlock Text="Адрес:" FontSize="11" Foreground="Gray"/>
+                                <TextBlock Text="{Binding Address}" TextWrapping="Wrap"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="4" Orientation="Vertical">
+                                <TextBlock Text="Дата заказа / выдачи" FontSize="11" Foreground="Gray"/>
+                                <TextBlock>
+                                    <Run Text="{Binding OrderDate, StringFormat=d}"/>
+                                    <Run Text=" / "/>
+                                    <Run Text="{Binding DeliveryDate, StringFormat=d}"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </DockPanel>
 </Page>
