@@ -31,7 +31,13 @@ namespace WpfApp3
             string fullName = FullNameTextBox.Text.Trim();
             string login = LoginTextBox.Text.Trim();
             string password = PasswordBox.Password.Trim();
-            string role = (RoleComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+            string? role = (RoleComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
+
+            if (string.IsNullOrWhiteSpace(role))
+            {
+                MessageBox.Show("Выберите роль!");
+                return;
+            }
 
             if (string.IsNullOrWhiteSpace(fullName) || string.IsNullOrWhiteSpace(login) ||
                 string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(role))

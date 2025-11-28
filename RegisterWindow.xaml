@@ -22,7 +22,7 @@
         <ComboBox x:Name="RoleComboBox" Grid.Row="4" Margin="0,0,0,5">
             <ComboBoxItem Content="Администратор"/>
             <ComboBoxItem Content="Менеджер"/>
-            <ComboBoxItem Content="Гость"/>
+            <ComboBoxItem Content="Пользователь"/>
         </ComboBox>
 
         <Button Content="Зарегистрироваться" Grid.Row="4" Height="30" Click="Register_Click" Margin="0,79,0,-77"/>

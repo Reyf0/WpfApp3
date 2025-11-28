@@ -15,7 +15,6 @@ namespace WpfApp3.Models
         public decimal Price { get; set; }
         public int Discount { get; set; }
         public int Quantity { get; set; }
-        public string ImagePath { get; set; } = "Images/placeholder.png";
-        public ICollection<Product>? Products { get; set; }
+        public string? ImagePath { get; set; }
     }
 }

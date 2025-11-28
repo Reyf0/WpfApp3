@@ -23,7 +23,7 @@ namespace WpfApp3
     /// </summary>
     public partial class OrdersWindow : Page
     {
-        private Models.User _user;
+        private readonly Models.User _user;
 
         public OrdersWindow(Models.User user)
         {

@@ -9,6 +9,7 @@ namespace WpfApp3.Models
     public enum Role
     {
         Guest,
+        User,
         Manager,
         Administrator
     }
